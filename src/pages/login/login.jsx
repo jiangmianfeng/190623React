@@ -10,6 +10,8 @@ import {
     } from 'antd';
 import {reqLogin} from "../../api/index";
 import memoryUtils from '../../utils/memoryUtils';
+import storageUtils from '../../utils/storageUtils';
+import {Redirect} from 'react-router-dom';
 class Login extends Component{
     handleSubmit=(event)=>{
         // 阻止事件的默认行为
@@ -24,7 +26,10 @@ class Login extends Component{
                 if(result.status===0){
                     message.success('登陆成功');
                     const user=result.data;
-                    memoryUtils.user=user;
+                    memoryUtils.user=user;// 保存在内存中
+                    storageUtils.saveUser(user);// 保存到local中
+                    console.log(storageUtils.getUser());
+                    // 跳转到管理界面 (不需要再回退回到登陆)
                     this.props.history.replace('/');
                 }else{
                     message.error(result.msg);
@@ -51,8 +56,6 @@ class Login extends Component{
         // console.log(values);
     };
     validatorPSW=(rule, value, callback)=>{
-        console.log(rule);
-        console.log(value);
         if(!value){
             callback("密码必须输入");
         }else if(value.length<5) {
@@ -66,6 +69,11 @@ class Login extends Component{
         }
     };
     render(){
+        // 如果用户已经登陆, 自动跳转到管理界面
+        const user=memoryUtils.user;
+        if(user&&user._id){
+            return <Redirect to='/'/>
+        }
         const form=this.props.form;
         const {getFieldDecorator} = form;
         return (
