@@ -39,6 +39,8 @@ const { SubMenu } = Menu;
         )
     };
     getMenuNode=(MenuList)=>{
+        let path=this.props.location.pathname;
+        //console.log('render()',path);
       return MenuList.reduce((pre,item)=>{
             if(!item.children){
                 pre.push((
@@ -50,6 +52,12 @@ const { SubMenu } = Menu;
                     </Menu.Item>
                 ))
             }else{
+                const citem=item.children.find(citem=>citem.key===path);
+
+                if(citem){
+                    this.openkey=item.key;
+                    console.log('citem',this.openkey);
+                }
                 pre.push((
                     <SubMenu
                         key={item.key}
@@ -69,9 +77,15 @@ const { SubMenu } = Menu;
             return pre;
       },[]);
     };
+    componentWillMount(){
+        this.muenNodes=this.getMenuNode(MenuList);
+    }
     render(){
+        const muenNodes=this.getMenuNode(MenuList);
         let path=this.props.location.pathname;
-        console.log('render()',path);
+        //console.log('render()',path);
+        const openKey=this.openkey;
+        console.log(openKey);
         return (
             <div className="left-nev">
                 <Link to='/' className="left-nev-header">
@@ -84,9 +98,10 @@ const { SubMenu } = Menu;
                     mode="inline"
                     theme="dark"
                     selectedKeys={[path]}
+                    defaultOpenKeys={[openKey]}
                 >
                     {
-                        this.getMenuNode(MenuList)
+                        muenNodes
                     }
                 </Menu>
                 {/*<Menu.Item key="home">
