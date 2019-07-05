@@ -53,10 +53,9 @@ const { SubMenu } = Menu;
                 ))
             }else{
                 const citem=item.children.find(citem=>citem.key===path);
-
                 if(citem){
                     this.openkey=item.key;
-                    console.log('citem',this.openkey);
+                    //console.log('citem',this.openkey);
                 }
                 pre.push((
                     <SubMenu
@@ -81,6 +80,7 @@ const { SubMenu } = Menu;
         this.muenNodes=this.getMenuNode(MenuList);
     }
     render(){
+        //debugger;
         const muenNodes=this.getMenuNode(MenuList);
         let path=this.props.location.pathname;
         //console.log('render()',path);
@@ -91,7 +91,7 @@ const { SubMenu } = Menu;
                 <Link to='/' className="left-nev-header">
                     <img src={logo} alt="logo"/>
                     <h1>
-                        上海电气设计
+                        上海电气
                     </h1>
                 </Link>
                 <Menu

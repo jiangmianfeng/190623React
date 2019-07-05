@@ -26,10 +26,10 @@ export default class Admin extends Component{
                     <LeftNev/>
                 </Sider>
                 <Layout>
-                    <Header style={{height:80,backgroundColor: '#cccccc'}}>
+                    <Header style={{height:80,backgroundColor: 'white'}}>
                         <Head/>
                     </Header>
-                    <Content style={{backgroundColor:'#fff'}}>
+                    <Content style={{backgroundColor:'#fff',margin:20}}>
                         <Switch>
                             <Route path='/home' component={Home}/>
                             <Route path='/category' component={Category}/>
