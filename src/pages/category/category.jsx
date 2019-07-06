@@ -4,7 +4,8 @@ import {
     Table,
     Button,
     Icon,
-    message
+    message,
+    Modal
     } from 'antd';
 
 
@@ -19,7 +20,8 @@ export default class Category extends Component{
         categorys:[],
         subCategorys:[],
         parentId:'0',
-        parentName:''
+        parentName:'',
+        showState:'0'
     };
     getCategory=async ()=>{
       this.setState({loading:true});
@@ -59,7 +61,7 @@ export default class Category extends Component{
                 key: 'x',
                 render: (categaory) =>(
                     <span>
-                        <LinkButton>
+                        <LinkButton onClick={this.showUpdateCategory}>
                             修改分类
                         </LinkButton>
                         {
@@ -91,6 +93,27 @@ export default class Category extends Component{
             this.getCategory();
         })
     };
+    addCategory=()=>{
+
+    };
+    updateCategory=()=>{
+
+    };
+    showAddCategory=()=>{
+        this.setState({
+            showState:'1'
+        })
+    };
+    showUpdateCategory=()=>{
+        this.setState({
+            showState:'2'
+        })
+    };
+    handleCancel=()=>{
+      this.setState({
+          showState:'0'
+      })
+    };
     componentWillMount(){
         this.initColumns();
     }
@@ -98,7 +121,7 @@ export default class Category extends Component{
         this.getCategory();
     }
     render(){
-        const {categorys,loading,parentId,parentName,subCategorys}=this.state;
+        const {categorys,loading,parentId,parentName,subCategorys,showState}=this.state;
         const title=parentId==='0'?'一级分类列表':(
             <span>
                 <LinkButton onClick={this.showCategory}>一级分类列表</LinkButton>
@@ -107,7 +130,7 @@ export default class Category extends Component{
             </span>
         );
         const extra=(
-            <Button type='primary'>
+            <Button type='primary' onClick={this.showAddCategory}>
               <Icon type='plus'/>
               添加
             </Button>
@@ -125,6 +148,22 @@ export default class Category extends Component{
                     loading={loading}
                     pagination={{defaultPageSize:5,showQuickJumper:true}}
                 />
+                <Modal
+                    title="添加分类"
+                    visible={showState==='1'}
+                    onOk={this.addCategory}
+                    onCancel={this.handleCancel}
+                >
+                    <p>添加分类</p>
+                </Modal>
+                <Modal
+                    title="更新分类"
+                    visible={showState==='2'}
+                    onOk={this.updateCategory}
+                    onCancel={this.handleCancel}
+                >
+                    <p>更新分类</p>
+                </Modal>
             </Card>
         )
     }
