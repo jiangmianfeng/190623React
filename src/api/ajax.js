@@ -15,7 +15,7 @@ import {message} from'antd';
          let promise;
          if(type==='GET'){
              promise= axios.get(url,{//配置对象
-                 params:{ID:1234}//指定请求参数
+                 params:data //指定请求参数
              });
          }else{
              promise= axios.post(url,data);
@@ -28,9 +28,6 @@ import {message} from'antd';
      })
  }
 //ajax('/login',{username:'wjq',password:'123'},'POST').then()
-
-
-
 // 请求登陆接口
 // ajax('/login', {username: 'Tom', passsword: '12345'}, 'POST').then()
 // 添加用户

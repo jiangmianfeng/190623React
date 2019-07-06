@@ -85,7 +85,7 @@ const { SubMenu } = Menu;
         let path=this.props.location.pathname;
         //console.log('render()',path);
         const openKey=this.openkey;
-        console.log(openKey);
+        //console.log(openKey);
         return (
             <div className="left-nev">
                 <Link to='/' className="left-nev-header">

@@ -13,6 +13,6 @@ export default {
         return store.get(USER_KEY)||{};
     },
     removeUser(){
-      store.remote(USER_KEY);
+      store.remove(USER_KEY);
     }
 }
