@@ -17,8 +17,9 @@ export const reqWeather=(resolve,city)=>{
     return new Promise((resolve, reject) => {
         const url=`http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`;
         jsonp(url,{},(err,data)=>{
+            console.log(data);
             if(!err&&data.status==='success'){
-                const {dayPictureUrl,weather}=data.results[0].weather_data[0];
+                const {dayPictureUrl,weather}=data.results[0].weather_data[1];
                 resolve({dayPictureUrl,weather})
             }else{
                 message.error('获取天气失败');
@@ -30,11 +31,11 @@ export const reqWeather=(resolve,city)=>{
 // 获取一级或某个二级分类列表
 export const reqCategorys=(parentId)=>ajax('/manage/category/list',{parentId});
 //添加分类
-export const reqAddCategory=(parentId,categoryName)=>ajax('/manage/category/add',
-    {parentId,categoryName},'POST');
+export const reqAddCategory=(categoryId,categoryName)=>ajax('/manage/category/add',
+    {categoryId,categoryName},'POST');
 //更新分类
-export const reqUpdategory=({parentId,categoryName})=>ajax('/manage/category/add',
-    {parentId,categoryName},'POST');
+export const reqUpdategory=({categoryId,categoryName})=>ajax('/manage/category/update',
+    {categoryId,categoryName},'POST');
 
 
 /*
