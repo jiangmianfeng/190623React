@@ -4,14 +4,14 @@ import {Redirect,Switch,Route} from 'react-router-dom';
 import { Layout } from 'antd';
 import LeftNev from'../../components/left-nev';
 import Head from '../../components/header'
-import Home from '../home/home'
-import Category from '../category/category'
-import Product from '../product/product'
-import Role from '../role/role'
-import User from '../user/user'
-import Bar from '../chart/bar'
-import Line from '../chart/line'
-import Pie from '../chart/pie'
+import Home from '../home/home';
+import CategoryPage from '../category/categoryPage';
+import Product from '../product/product';
+import Role from '../role/role';
+import User from '../user/user';
+import Bar from '../chart/bar';
+import Line from '../chart/line';
+import Pie from '../chart/pie';
 
 const { Header, Footer, Sider, Content } = Layout;
 export default class Admin extends Component{
@@ -32,7 +32,7 @@ export default class Admin extends Component{
                     <Content style={{backgroundColor:'#fff',margin:20}}>
                         <Switch>
                             <Route path='/home' component={Home}/>
-                            <Route path='/category' component={Category}/>
+                            <Route path='/category' component={CategoryPage}/>
                             <Route path='/product' component={Product}/>
                             <Route path='/user' component={User}/>
                             <Route path='/role' component={Role}/>

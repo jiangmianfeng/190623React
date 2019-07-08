@@ -8,11 +8,8 @@ import {
     Modal
     } from 'antd';
 
-
 import LinkButton from "../../components/link-button/index";
-import {reqCategorys, reqUpdategory} from '../../api/index';
-//import {reqAddCategory} from '../../api/index';
-//import {reqUpdategory} from '../../api/index';
+import {reqAddCategory, reqCategorys, reqUpdategory} from '../../api/index';
 import AddForm from './add-form';
 import UpdateForm from './update-form';
 
@@ -52,10 +49,24 @@ export default class Category extends Component{
     initColumns=()=>{
         this.columns = [
             {
-                title: '分类的名称',
+                title: '产品名称',
                 dataIndex: 'name',
                 key: 'name',
-                width:1300,
+            },
+            {
+                title: '零件名称',
+                dataIndex: 'name',
+                key: 'name1',
+            },
+            {
+                title: '编织者',
+                dataIndex: 'name',
+                key: 'name3',
+            },
+            {
+                title: '发布状态',
+                dataIndex: 'name',
+                key: 'name4',
             },
             {
                 title: '操作',
@@ -96,7 +107,21 @@ export default class Category extends Component{
         })
     };
     addCategory=()=>{
-
+        this.form.validateFields(async(err,values)=>{
+            if(!err){
+                this.setState({
+                    showState:'0'
+                });
+                const {categoryName,categoryId}=values;
+                this.form.resetFields();
+                const res=await reqAddCategory(categoryId,categoryName);
+                const result=res.data;
+                console.log(result.status);
+                if(result.status===0){
+                    this.getCategory();
+                }
+            }
+        })
     };
     updateCategory=()=>{
         this.form.validateFields(async(err,values)=>{
@@ -144,9 +169,9 @@ export default class Category extends Component{
     render(){
         const {categorys,loading,parentId,parentName,subCategorys,showState}=this.state;
         const category=this.category||{};
-        const title=parentId==='0'?'一级分类列表':(
+        const title=parentId==='0'?'产品列表':(
             <span>
-                <LinkButton onClick={this.showCategory}>一级分类列表</LinkButton>
+                <LinkButton onClick={this.showCategory}>产品列表</LinkButton>
                 <Icon type='arrow-right' style={{margin:5}}/>
                 <span>{parentName}</span>
             </span>
@@ -176,7 +201,11 @@ export default class Category extends Component{
                     onOk={this.addCategory}
                     onCancel={this.handleCancel}
                 >
-                    <AddForm/>
+                    <AddForm
+                        categorys={categorys}
+                        parentId={parentId}
+                        setForm={(form)=>{this.form=form}}
+                    />
                 </Modal>
                 <Modal
                     title="更新分类"

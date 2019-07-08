@@ -80,7 +80,7 @@ class Login extends Component{
             <div className="login">
                 <header className="login-header">
                     <img src={logo} alt="logo"/>
-                    <h1>React项目：后台管理项目</h1>
+                    <h1>上海电气智能制造</h1>
                 </header>
                 <section className="login-content">
                     <h2>用户登录</h2>
