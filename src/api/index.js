@@ -31,8 +31,8 @@ export const reqWeather=(resolve,city)=>{
 // 获取一级或某个二级分类列表
 export const reqCategorys=(parentId)=>ajax('/manage/category/list',{parentId});
 //添加分类
-export const reqAddCategory=(categoryId,categoryName)=>ajax('/manage/category/add',
-    {categoryId,categoryName},'POST');
+export const reqAddCategory=(parentId,categoryName)=>ajax('/manage/category/add',
+    {parentId,categoryName},'POST');
 //更新分类
 export const reqUpdategory=({categoryId,categoryName})=>ajax('/manage/category/update',
     {categoryId,categoryName},'POST');

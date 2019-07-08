@@ -30,7 +30,7 @@ class AddForm extends Component{
                             <Select>
                                 <Option value='0'>一级分类</Option>
                                 {
-                                    categorys.map(m=><Option value={m._id}>{m.name}</Option>)
+                                    categorys.map(m=><Option key={m._id} value={m._id}>{m.name}</Option>)
                                 }
                             </Select>
                         )
@@ -39,7 +39,11 @@ class AddForm extends Component{
                 <Item>
                     {
                         getFieldDecorator('categoryName',{
-                            initialValue:''
+                            initialValue:'',
+                            rules:[{
+                                required:true,
+                                message:"请必须输入参数"
+                            }]
                         })(
                             <Input placeholder='请输入工艺名称'/>
                         )

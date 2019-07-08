@@ -22,9 +22,9 @@ export default class Category extends Component{
         parentName:'',
         showState:'0'
     };
-    getCategory=async ()=>{
+    getCategory=async (parentId)=>{
       this.setState({loading:true});
-      const {parentId}=this.state;
+      parentId=parentId||this.state.parentId;
       const res=await reqCategorys(parentId);
       this.setState({loading:false});
       const result=res.data;
@@ -52,21 +52,6 @@ export default class Category extends Component{
                 title: '产品名称',
                 dataIndex: 'name',
                 key: 'name',
-            },
-            {
-                title: '零件名称',
-                dataIndex: 'name',
-                key: 'name1',
-            },
-            {
-                title: '编织者',
-                dataIndex: 'name',
-                key: 'name3',
-            },
-            {
-                title: '发布状态',
-                dataIndex: 'name',
-                key: 'name4',
             },
             {
                 title: '操作',
@@ -112,13 +97,17 @@ export default class Category extends Component{
                 this.setState({
                     showState:'0'
                 });
-                const {categoryName,categoryId}=values;
+                const {categoryName,parentId}=values;
                 this.form.resetFields();
-                const res=await reqAddCategory(categoryId,categoryName);
+                const res=await reqAddCategory(parentId,categoryName);
                 const result=res.data;
                 console.log(result.status);
                 if(result.status===0){
-                    this.getCategory();
+                    if(parentId===this.state.parentId){
+                        this.getCategory();
+                    }else if(parentId==='0'){ // 在二级分类列表下添加一级分类, 重新获取一级分类列表, 但不需要显示一级列表
+                        this.getCategory('0');
+                    }
                 }
             }
         })
