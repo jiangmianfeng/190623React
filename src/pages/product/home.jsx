@@ -8,14 +8,37 @@ import {
     Card
     }from 'antd';
 import ButtonLink from'../../components/link-button/index';
+import {reqProduct}from'../../api/index';
+import {PAGESIZE} from "../../utils/constants";
+
 const Option=Select.Option;
 export default class ProductHome extends Component{
     state={
-        product:[]
+        product:[],
+        loading:false,
+        total:0
     };
     componentWillMount(){
         this.initColumns();
     }
+    componentDidMount(){
+        this.getProduct(1);
+    }
+    getProduct=async (pageNum)=> {
+        this.pageNum = pageNum;
+        this.setState({loading: true});
+        const res = await reqProduct(pageNum,PAGESIZE);
+        this.setState({loading:false});
+        const result=res.data;
+        const total=result.data.total;
+        const list=result.data.list;
+        if(result.status===0){
+            this.setState({
+                product:list,
+                total
+            })
+        }
+    };
     initColumns=()=>{
         this.columns = [
             {
@@ -36,7 +59,7 @@ export default class ProductHome extends Component{
                 width:100,
                 render:(state)=>{return (
                     <span>
-                        <Button>上架</Button>
+                        <Button type='primary'>上架</Button>
                         <span>在售</span>
                     </span>
                 )}
@@ -72,13 +95,21 @@ export default class ProductHome extends Component{
                 <span>添加商品</span>
             </Button>
         );
-        const {product}=this.state;
+        const {product,total}=this.state;
         return(
             <Card title={title} extra={extra}>
                 <Table
                     bordered={true}
                     dataSource={product}
                     columns={this.columns}
+                    rowKey='_id'
+                    pagination={{
+                        current:this.pageNum,
+                        total:total,
+                        defaultPageSize:PAGESIZE,
+                        showQuickJumper:true,
+                        onChange:this.getProduct
+                    }}
                 />
             </Card>
         )
