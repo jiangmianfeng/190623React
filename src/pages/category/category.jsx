@@ -9,7 +9,7 @@ import {
     } from 'antd';
 
 import LinkButton from "../../components/link-button/index";
-import {reqAddCategory, reqCategorys, reqUpdategory} from '../../api/index';
+import {reqAddCategory, reqCategorys, reqUpdateCategory} from '../../api/index';
 import AddForm from './add-form';
 import UpdateForm from './update-form';
 
@@ -123,7 +123,7 @@ export default class Category extends Component{
                 const {categoryName}=values;
                 this.form.resetFields();//清空数据
                 // 2. 发请求更新分类
-                const res=await reqUpdategory({categoryId,categoryName});
+                const res=await reqUpdateCategory({categoryId,categoryName});
                 const result=res.data;
                 console.log('result',result);
                 if(result.status===0){

@@ -8,15 +8,17 @@ import {
     Card
     }from 'antd';
 import ButtonLink from'../../components/link-button/index';
-import {reqProduct}from'../../api/index';
-import {PAGESIZE} from "../../utils/constants";
+import {reqProduct,reqSearchProduct}from'../../api/index';
+import {PAGE_SIZE} from "../../utils/constants";
 
 const Option=Select.Option;
 export default class ProductHome extends Component{
     state={
         product:[],
         loading:false,
-        total:0
+        total:0,
+        searchName:'',
+        searchType:'productName'
     };
     componentWillMount(){
         this.initColumns();
@@ -27,7 +29,13 @@ export default class ProductHome extends Component{
     getProduct=async (pageNum)=> {
         this.pageNum = pageNum;
         this.setState({loading: true});
-        const res = await reqProduct(pageNum,PAGESIZE);
+        const {searchName,searchType}=this.state;
+        let res;
+        if(searchName){
+            res = await reqSearchProduct({pageNum,pageSize:PAGE_SIZE,searchName,searchType});
+        }else{
+            res = await reqProduct(pageNum,PAGE_SIZE);
+        }
         this.setState({loading:false});
         const result=res.data;
         const total=result.data.total;
@@ -70,8 +78,12 @@ export default class ProductHome extends Component{
                 render:(product)=>{
                     return(
                         <span>
-                            <ButtonLink>修改</ButtonLink>
-                            <ButtonLink>详情</ButtonLink>
+                            <ButtonLink>
+                                修改
+                            </ButtonLink>
+                            <ButtonLink onClick={()=>this.props.history.push('/product/detail',{product})}>
+                                详情
+                            </ButtonLink>
                         </span>
                     )
                 }
@@ -79,14 +91,25 @@ export default class ProductHome extends Component{
         ];
     };
     render(){
+        const {product,total,searchName,searchType}=this.state;
         const title=(
           <span>
-              <Select value='1'>
-                  <Option value='1'>按名称搜索</Option>
-                  <Option value='2'>按描述搜索</Option>
+              <Select
+                  value={searchType}
+                  onChange={(value)=>this.setState({
+                      searchType:value
+                  })}
+              >
+                  <Option value='productName'>按名称搜索</Option>
+                  <Option value='productDesc'>按描述搜索</Option>
               </Select>
-              <Input placeholder="关键字" style={{width:'150px',margin:'0 15px'}}/>
-              <Button type='primary'>搜索</Button>
+              <Input
+                  placeholder="关键字"
+                  style={{width:'150px',margin:'0 15px'}}
+                  value={searchName}
+                  onChange={event=>this.setState({ searchName:event.target.value})}
+              />
+              <Button type='primary' onClick={()=>this.getProduct(1)}>搜索</Button>
           </span>
         );
         const extra=(
@@ -95,7 +118,7 @@ export default class ProductHome extends Component{
                 <span>添加商品</span>
             </Button>
         );
-        const {product,total}=this.state;
+
         return(
             <Card title={title} extra={extra}>
                 <Table
@@ -106,7 +129,7 @@ export default class ProductHome extends Component{
                     pagination={{
                         current:this.pageNum,
                         total:total,
-                        defaultPageSize:PAGESIZE,
+                        defaultPageSize:PAGE_SIZE,
                         showQuickJumper:true,
                         onChange:this.getProduct
                     }}

@@ -34,10 +34,15 @@ export const reqCategorys=(parentId)=>ajax('/manage/category/list',{parentId});
 export const reqAddCategory=(parentId,categoryName)=>ajax('/manage/category/add',
     {parentId,categoryName},'POST');
 //更新分类
-export const reqUpdategory=({categoryId,categoryName})=>ajax('/manage/category/update',
+export const reqUpdateCategory=({categoryId,categoryName})=>ajax('/manage/category/update',
     {categoryId,categoryName},'POST');
 
 export const reqProduct=(pageNum,pageSize)=>ajax('/manage/product/list',{pageNum,pageSize});
+export const reqSearchProduct=({pageNum,pageSize,searchName,searchType})=>ajax('/manage/product/search',{
+    [searchType]:searchName,
+    pageNum,
+    pageSize
+});
 /*
 jsonp解决ajax跨域的原理
   1). jsonp只能解决GET类型的ajax请求跨域问题
