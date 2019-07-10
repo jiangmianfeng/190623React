@@ -11,7 +11,6 @@ const Item=List.Item;
 export default class ProductDetail extends Component{
     render(){
         const {name,desc,price,imgs}=this.props.location.state.product;
-        console.log(imgs);
         const title=(
           <span>
             <LinkButton>
@@ -46,7 +45,12 @@ export default class ProductDetail extends Component{
                     <Item>
                         <span className="left">商品图片:</span>
                         {
-                            imgs.map(m=><img src={PATH+m}  className="product-img" alt='img'/>)
+                            imgs.map(m=>
+                                <img
+                                src={PATH+m}
+                                className="product-img"
+                                alt='img'/>
+                            )
                         }
                     </Item>
                     <Item>
