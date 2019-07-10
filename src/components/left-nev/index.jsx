@@ -52,7 +52,7 @@ const { SubMenu } = Menu;
                     </Menu.Item>
                 ))
             }else{
-                const citem=item.children.find(citem=>citem.key===path);
+                const citem=item.children.find(citem=>path.indexOf(citem.key)===0);
                 if(citem){
                     this.openkey=item.key;
                     //console.log('citem',this.openkey);
@@ -83,6 +83,10 @@ const { SubMenu } = Menu;
         //debugger;
         const muenNodes=this.getMenuNode(MenuList);
         let path=this.props.location.pathname;
+
+        if(path.indexOf('/product')===0){
+            path='/product';
+        }
         //console.log('render()',path);
         const openKey=this.openkey;
         //console.log(openKey);

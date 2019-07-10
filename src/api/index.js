@@ -43,6 +43,9 @@ export const reqSearchProduct=({pageNum,pageSize,searchName,searchType})=>ajax('
     pageNum,
     pageSize
 });
+export const reqCategate=(categoryId)=>ajax('/manage/category/info',{categoryId});
+
+export const reqUpdateStatus=(productId,status)=>ajax('/manage/product/updateStatus',{productId,status},'POST');
 /*
 jsonp解决ajax跨域的原理
   1). jsonp只能解决GET类型的ajax请求跨域问题

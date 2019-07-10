@@ -5,10 +5,11 @@ import {
     Input,
     Icon,
     Table,
-    Card
+    Card,
+    message
     }from 'antd';
 import ButtonLink from'../../components/link-button/index';
-import {reqProduct,reqSearchProduct}from'../../api/index';
+import {reqProduct,reqSearchProduct,reqUpdateStatus}from'../../api/index';
 import {PAGE_SIZE} from "../../utils/constants";
 
 const Option=Select.Option;
@@ -47,6 +48,13 @@ export default class ProductHome extends Component{
             })
         }
     };
+    updateStatus=async (productId,status)=>{
+        const result=await reqUpdateStatus(productId,status);
+        if(result.data.status===0){
+            message.success("状态更新成功");
+            this.getProduct(this.pageNum);
+        }
+    };
     initColumns=()=>{
         this.columns = [
             {
@@ -65,10 +73,22 @@ export default class ProductHome extends Component{
             {
                 title: '状态',
                 width:100,
-                render:(state)=>{return (
+                render:(product)=>{
+                    const {_id,status}=product;
+                    const newStatus=status===1?2:1;
+                    return (
                     <span>
-                        <Button type='primary'>上架</Button>
-                        <span>在售</span>
+                        <Button
+                            type='primary'
+                            onClick={()=>this.updateStatus(_id,newStatus)}
+                        >
+                            {status===1?'下架':'上架'}
+                        </Button>
+                        <span>
+                            {
+                                status===1?'在售':'已下架'
+                            }
+                        </span>
                     </span>
                 )}
             },
