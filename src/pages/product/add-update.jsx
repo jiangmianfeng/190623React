@@ -25,63 +25,94 @@ class AddUpdateProduct extends Component{
         }
     };
     submit=()=>{
-        // this.props.form.validateFields(asnyc (error,values)=>{
-        //     if(!error){
-        //         const {name,desc,price,category}
-        //     }
-        // });
+        this.props.form.validateFields((error,values)=>{
+           if(!error){
+               console.log(values,'submit');
+           }
+        });
     };
-    loadData = (selectedOptions) => {
-        const targetOption = selectedOptions[selectedOptions.length - 1];
+    loadData = async(selectedOptions) => {
+        const targetOption = selectedOptions[0];
         targetOption.loading = true;
-        setTimeout(() => {
-            targetOption.loading = false;
-            targetOption.children = [
-                {
-                    label: `${targetOption.label} Dynamic 1`,
-                    value: 'dynamic1',
-                },
-                {
-                    label: `${targetOption.label} Dynamic 2`,
-                    value: 'dynamic2',
-                },
-            ];
-            this.setState({
-                options: [...this.state.options],
-            });
-        }, 1000);
+        const subCategorys=await this.getCategory(targetOption.value);
+        targetOption.loading = false;
+        if(subCategorys&&subCategorys.length>0){
+            const childOptions=subCategorys.map(m=>({
+                value:m._id,
+                label: m.name,
+                isLeaf: true,
+            }))
+            targetOption.children=childOptions;
+        }else{
+            targetOption.isLeaf=true;
+        }
+
+        this.setState({
+            options: [...this.state.options],
+        });
     };
     getCategory=async (parentId)=>{
         const res=await reqCategorys(parentId);
         const result=res.data;
-        console.log(result,'i');
         if(result.status===0){
             const categorys=result.data;
-            this.initOptions(categorys)
+            if(parentId==='0'){
+                this.initOptions(categorys);
+            }else{
+                return categorys
+            }
         }
     };
-    initOptions=(categorys)=>{
+    initOptions=async (categorys)=>{
         const options=categorys.map((m)=>({
             value:m._id,
             label: m.name,
             isLeaf: false,
         }));
+        const {isUpdate,product}=this;
+        const {pCategoryId}=product;
+        if(isUpdate&&pCategoryId!=='0'){
+            const subCategorys=await this.getCategory(pCategoryId);
+            const childOptions=subCategorys.map(m=>({
+                value:m._id,
+                label: m.name,
+                isLeaf: true,
+            }));
+            const targetOption=options.find(option=>option.value===pCategoryId);
+            targetOption.children=childOptions;
+        }
         this.setState({
-            options
+            options:options
         })
     };
     componentDidMount(){
         this.getCategory('0');
     }
+    componentWillMount(){
+        const product=this.props.location.state;
+        this.isUpdate=!!product;
+        this.product=product||{};
+    }
     render(){
+        const {isUpdate,product}=this;
+        const{pCategoryId,categoryId}=product;
         const title=(
             <span>
                 <LinkButton onClick={()=>this.props.history.goBack()}>
                     <Icon type='arrow-left' style={{fontSize:20}}/>
                 </LinkButton>
-                <span>添加商品</span>
+                <span>{isUpdate?'修改商品':"添加商品"}</span>
             </span>
         );
+        const category=[];
+        if(isUpdate){
+            if(pCategoryId==='0'){
+                category.push(categoryId);
+            }else{
+                category.push(pCategoryId);
+                category.push(categoryId);
+            }
+        }
         const formItemLayout={
           labelCol:{span:2},
           wrapperCol:{span:8},
@@ -93,7 +124,7 @@ class AddUpdateProduct extends Component{
                     <Item label="商品名称">
                         {
                             getFieldDecorator('name', {
-                                initialValue: '',
+                                initialValue: product.name,
                                 rules: [
                                     {required: true, message: '必须输入商品名称'}
                                 ]
@@ -103,7 +134,7 @@ class AddUpdateProduct extends Component{
                     <Item label="商品描述">
                         {
                             getFieldDecorator('desc',{
-                                initialValue:'',
+                                initialValue:product.desc,
                                 rules:[
                                     {required:true,message:"必须输入商品描述"}
                                 ]
@@ -112,19 +143,19 @@ class AddUpdateProduct extends Component{
                     </Item>
                     <Item label="商品价格">
                         {
-                            getFieldDecorator('desc',{
-                                initialValue:'',
+                            getFieldDecorator('price',{
+                                initialValue:product.price,
                                 rules:[
                                     {required:true,message:"必须输入商品价格"},
                                     {validate:this.validatePrice}
                                 ]
-                            })(<Input placeholder="请输入商品价格"/>)
+                            })(<Input type='number' addonAfter='元' placeholder="请输入商品价格"/>)
                         }
                     </Item>
                     <Item label="商品分类">
                         {
                             getFieldDecorator('category',{
-                                initialValue:[],
+                                initialValue:category,
                                 rules:[
                                     {required:true,message:"必须输入商品分类"}
                                 ]
