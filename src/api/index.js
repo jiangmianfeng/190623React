@@ -46,6 +46,8 @@ export const reqSearchProduct=({pageNum,pageSize,searchName,searchType})=>ajax('
 export const reqCategate=(categoryId)=>ajax('/manage/category/info',{categoryId});
 
 export const reqUpdateStatus=(productId,status)=>ajax('/manage/product/updateStatus',{productId,status},'POST');
+// 删除指定名称的图片
+export const reqDeleteImg = (name) => ajax( '/manage/img/delete', {name}, 'POST')
 /*
 jsonp解决ajax跨域的原理
   1). jsonp只能解决GET类型的ajax请求跨域问题

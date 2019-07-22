@@ -10,6 +10,7 @@ import {
 }from 'antd';
 import {reqCategorys} from "../../api/index";
 import LinkButton from "../../components/link-button/index";
+import PicturesWall from"./picturesWall";
 const Item=Form.Item;
 const {TextArea}=Input;
 class AddUpdateProduct extends Component{
@@ -41,7 +42,7 @@ class AddUpdateProduct extends Component{
                 value:m._id,
                 label: m.name,
                 isLeaf: true,
-            }))
+            }));
             targetOption.children=childOptions;
         }else{
             targetOption.isLeaf=true;
@@ -96,14 +97,12 @@ class AddUpdateProduct extends Component{
     render(){
         const {isUpdate,product}=this;
         const{pCategoryId,categoryId}=product;
-        const title=(
-            <span>
+        const title=(<span>
                 <LinkButton onClick={()=>this.props.history.goBack()}>
                     <Icon type='arrow-left' style={{fontSize:20}}/>
                 </LinkButton>
                 <span>{isUpdate?'修改商品':"添加商品"}</span>
-            </span>
-        );
+            </span>);
         const category=[];
         if(isUpdate){
             if(pCategoryId==='0'){
@@ -166,7 +165,7 @@ class AddUpdateProduct extends Component{
                         }
                     </Item>
                     <Item label="商品图片">
-                        <Input />
+                        <PicturesWall />
                     </Item>
                     <Item label="商品详情">
                         <Input />
