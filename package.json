@@ -15,7 +15,7 @@
     "react-scripts": "3.0.1",
     "reduce": "^1.0.2",
     "store": "^2.0.12",
-    "yarn": "^1.16.0"
+    "yarn": "^1.17.3"
   },
   "scripts": {
     "start": "set port=3003&&react-app-rewired start",
